@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<meta charset="utf-8" />
+	<title>技能详情</title>
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" /><!--设置屏幕不可缩放-->
+	<meta name="apple-mobile-web-app-capable" content="yes" /><!-- 删除苹果默认的工具栏和菜单栏 -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" /><!-- 设置苹果工具栏颜色 -->
+	<meta name="format-detection" content="telphone=no, email=no" /><!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+	<!-- 启用360浏览器的极速模式(webkit) -->
+	<meta name="renderer" content="webkit">
+	<!-- 避免IE使用兼容模式 -->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<!-- 针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓 -->
+	<meta name="HandheldFriendly" content="true">
+	<!-- 微软的老式浏览器 -->
+	<meta name="MobileOptimized" content="320">
+	<!-- uc强制竖屏 -->
+	<meta name="screen-orientation" content="portrait">
+	<!-- QQ强制竖屏 -->
+	<meta name="x5-orientation" content="portrait">
+	<!-- UC强制全屏 -->
+	<meta name="full-screen" content="yes">
+	<!-- QQ强制全屏 -->
+	<meta name="x5-fullscreen" content="true">
+	<!-- UC应用模式 -->
+	<meta name="browsermode" content="application">
+	<!-- QQ应用模式 -->
+	<meta name="x5-page-mode" content="app">
+	<!-- windows phone 点击无高光 -->
+	<meta name="msapplication-tap-highlight" content="no">
+	<!-- 适应移动端end -->
+	
+	<link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/index.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="js/main.js"></script>
+	<script type="text/javascript" src="js/jquery.rotate.min.js"></script>
+	<script type="text/javascript" src="js/jQuery-jcMarquee.js"></script>
+	<script src="js/idangerous.swiper-1.9.1.min.js"></script>
+    <script type="text/javascript">
+    	 /**
+         * 获取指定URL的参数值
+         * @param url  指定的URL地址
+         * @param name 参数名称
+         * @return 参数值
+         */
+        function getUrlParam() {
+            url=location.href;
+            content_page="content_page";
+			loginer_id="loginer_id";
+            var pattern = new RegExp("[?&]"+content_page+"\=([^&]+)", "g");
+			var pattern1=new RegExp("[?&]"+loginer_id+"\=([^&]+)", "g");
+            var matcher = pattern.exec(url);
+			var matcher1=pattern1.exec(url);
+			var items1=null;
+            var items = null;
+            if(null != matcher&&null!=matcher1){
+                try{
+                    items = decodeURIComponent(decodeURIComponent(matcher[1]));
+					items1 = decodeURIComponent(decodeURIComponent(matcher1[1]));
+                }catch(e){
+                    try{
+                        items = decodeURIComponent(matcher[1]);
+						items1 = decodeURIComponent(matcher1[1]);
+                    }catch(e){
+                        items = matcher[1];
+						items1 = matcher1[1];
+                    }
+                }
+            }
+			/**跳转到个人主页**/
+		$("#loginer_info").attr("href","user_info/loginer_info.html?userId="+items1);
+		$("#main_href").attr("href","main.html?userId="+items1);
+			return items;
+		}
+		 function getUrlParam1() {
+            url=location.href;
+            content_page="content_page";
+			loginer_id="loginer_id";
+            var pattern = new RegExp("[?&]"+content_page+"\=([^&]+)", "g");
+			var pattern1=new RegExp("[?&]"+loginer_id+"\=([^&]+)", "g");
+            var matcher = pattern.exec(url);
+			var matcher1=pattern1.exec(url);
+			var items1=null;
+            var items = null;
+            if(null != matcher&&null!=matcher1){
+                try{
+                    items = decodeURIComponent(decodeURIComponent(matcher[1]));
+					items1 = decodeURIComponent(decodeURIComponent(matcher1[1]));
+                }catch(e){
+                    try{
+                        items = decodeURIComponent(matcher[1]);
+						items1 = decodeURIComponent(matcher1[1]);
+                    }catch(e){
+                        items = matcher[1];
+						items1 = matcher1[1];
+                    }
+                }
+            }
+			/**返回登录者**/
+			return items1;
+		}
+		function callOtherDomain(){
+			var invocation = new XMLHttpRequest();
+			var url = 'http://121.42.157.195:8080/qianxun/businessService_getById.action';
+			  if(invocation) {
+				invocation.open('GET', url, true);
+				invocation.withCredentials = true;
+			  }
+}
+		function refresh_list(response){
+			var loginer_id=getUrlParam1();
+/*			var user_id=getUrlParam();
+*/			var data=eval("("+response+")");
+			var pic_url='http://121.42.157.195:8080';
+			var user_info,face,p_name,sex,p_sex,shen_rz,xue_rz,jn_title,jn_price,jn_huibao,jn_dec,jn_pic1,jn_pic2,jn_pic3,jn_pic4;
+			alert(data.user.id);
+			user_info='user_info/owner_info.html?userId='+data.user.id+'&loginer_id='+loginer_id+'"'; 	//头像连接
+			face=pic_url+data.user.headIcon;	//头像
+			p_name=data.user.nickName;	//昵称
+			sex=data.user.gender;		//性别
+			if(sex=="男"||sex==""){
+				p_sex="images/male.png";
+			}else if(sex=="女"){
+				p_sex="images/female.png";
+			}
+			var ren=data.user.verifyStatus;		//认证状态
+			if(ren==0){
+				shen_rz='images/shiren.png';
+				xue_rz='images/xueren.png';
+			}else if(ren==1){
+				shen_rz='';
+				xue_rz='images/xueren.png';
+			}else if(ren==2){
+				shen_rz='';
+				xue_rz='';
+			}
+			jn_title=data.name;					//技能标题
+			jn_price=data.reward_money+'/'+data.reward_unit;	//技能价格
+			jn_huibao=data.reward_thing;	//技能回报
+			jn_dec=data.detail;		//技能详情
+			$("#face_href").attr("href",user_info);
+			//头像
+			$("#face").attr("src",face);
+			//昵称
+			$("#xq_per_name").text(p_name);
+			//性别
+			$("#sex_img").attr("src",p_sex);
+			//身份认证和学生认证
+			$("#shen_renzheng").attr("src",shen_rz);
+			$("#xue_renzheng").attr("src",xue_rz);
+			//技能标题
+			$("#title h2").text("技能 "+jn_title);
+			//技能价格
+			$("#price h2").text(jn_price);
+			//技能回报
+			if(""!=jn_huibao){
+			    $("#jn_huibao h4").text("我要 "+jn_huibao);
+			}else{
+			}
+			//技能描述
+			$("#jn_desc p").text(jn_dec);
+			switch(data.images.length){		//技能图片
+				case 0:
+					jn_pic1="images/jineng3.png";
+					$("#jn_pic").append('<img src="'+jn_pic1+'"/><br/>')
+					break;
+				case 1:
+					jn_pic1=pic_url+data.images[0].link;
+					$("#jn_pic").append('<img src="'+jn_pic1+'"/><br/>');
+					break;
+				case 2:
+					jn_pic1=pic_url+data.images[0].link;
+					jn_pic2=pic_url+data.images[1].link;
+					$("#jn_pic").append('<img src="'+jn_pic1+'"/><br/>');
+					$("#jn_pic").append('<img src="'+jn_pic2+'"/><br/>');
+					break;
+				case 3:
+					jn_pic1=pic_url+data.images[0].link;
+					jn_pic2=pic_url+data.images[1].link;
+					jn_pic3=pic_url+data.images[2].link;
+					$("#jn_pic").append('<img src="'+jn_pic1+'"/><br/>');
+					$("#jn_pic").append('<img src="'+jn_pic2+'"/><br/>');
+					$("#jn_pic").append('<img src="'+jn_pic3+'"/>');
+					break;
+				default:
+					jn_pic1=pic_url+data.images[0].link;
+					jn_pic2=pic_url+data.images[1].link;
+					jn_pic3=pic_url+data.images[2].link;
+					jn_pic4=pic_url+data.images[3].link;
+					$("#jn_pic").append('<img src="'+jn_pic1+'"/><br/>');
+					$("#jn_pic").append('<img src="'+jn_pic2+'"/><br/>');
+					$("#jn_pic").append('<img src="'+jn_pic3+'"/><br/>');
+					$("#jn_pic").append('<img src="'+jn_pic4+'"/>');
+					break;
+			}
+		}
+		function detect_brower(){
+		    var useragent = navigator.userAgent;
+		    if (useragent.match(/MicroMessenger/i) != "MicroMessenger") {
+		        alert("请使用微信客户端打开！");
+		        var opened = window.open('about:blank', '_self');
+		        opened.opener = null;
+		        opened.close();
+		    }
+		}
+
+		$(function(){
+			
+			//detect_brower();
+			
+			var item=getUrlParam();
+			if(item==null){
+				alert("请先登录!");
+				window.open("Login.html",'_self');
+			}
+			url='http://121.42.157.195:8080/qianxun/businessService_getById.action';
+			callOtherDomain();
+			$.post(url,{"serviceId":item},function(response,status){
+				refresh_list(response);
+				console.log(response);
+			});
+		});
+    </script>
+</head>
+
+<body>
+<div class="main">
+	<!--头部-->
+	<div class="header" id="bktop">
+		<div class="logo"><a id="main_href"><img src="images/logo.gif" /></a></div>
+		<div class="banner">
+			<div class="close"><img id="img1" src="images/banner01.gif" /></div>
+			<div class="open hide"><img id="img2" src="images/banner02.gif" /></div>
+			<ul class="xla">
+				<li>
+					<a id="loginer_info"><font>个人主页</font><img src="images/xiala.gif" /></a>
+				</li>
+				<li>
+					<a class="dianj dj2" href="javascript:;"><font>教你大招</font><img id="ig2" src="images/xiala.gif" /></a>
+					<div class="zilan">
+						<a href="http://www.rrxiu.net/view-0eme2l">快速上手</a>
+						<a href="wzxy.html">玩转校园</a>
+						<a href="aboutus.html">关于我们</a>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div class="clearBoth"></div>
+	</div>
+    <!--HEAD START! -->
+	<div class="xq_header">
+        <table width="100%" border="0" cellspacing="5" cellpadding="3">
+  <tr>
+    <td width="19%"> <div class="face_div"><a id="face_href" href="user_info/owner_info.html"><img class="face" id="face"/></a></div></td>
+    <td width="81%">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="15%" id="xq_per_name" class="xq_per_name"></td>
+        <td width="85%"><img id="sex_img" width="22px" height="22px"/></td>
+      </tr>
+      <tr>
+        <td colspan="2"><img id="shen_renzheng" class="xq_renzheng"/>&nbsp;<img id="xue_renzheng" class="xq_renzheng"/></td>
+      </tr>
+    </table>
+</td>
+  </tr>
+</table>
+	</div>
+    <!--HEAD END! -->
+    <!--XQ START -->
+    <div class="xq_dec_div">
+    	<div id="title">
+        	<h2></h2>
+        </div>
+        <div id="price">
+        	<h2></h2>
+        </div>
+        <div id="jn_huibao">
+        	<h4></h4>
+        </div>
+        <div id="jn_desc">
+        <table width="100%" border="0" cellspacing="5" cellpadding="3">
+          <tr>
+            <td><img src="images/green.png"/></td>
+            <td><p></p></td>
+          </tr>
+        </table>
+        </div>
+        <div id="jn_pic">
+        	
+        </div>
+    </div>
+    <!--XQ END -->
+</div>
+				<div class="clearBoth"></div>
+			
+</body>
+</html>

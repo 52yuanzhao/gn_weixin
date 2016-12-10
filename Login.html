@@ -1,0 +1,397 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Login</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" /><!--设置屏幕不可缩放-->
+	<meta name="apple-mobile-web-app-capable" content="yes" /><!-- 删除苹果默认的工具栏和菜单栏 -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" /><!-- 设置苹果工具栏颜色 -->
+	<meta name="format-detection" content="telphone=no, email=no" /><!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+	<!-- 启用360浏览器的极速模式(webkit) -->
+	<meta name="renderer" content="webkit">
+	<!-- 避免IE使用兼容模式 -->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<!-- 针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓 -->
+	<meta name="HandheldFriendly" content="true">
+	<!-- 微软的老式浏览器 -->
+	<meta name="MobileOptimized" content="320">
+	<!-- uc强制竖屏 -->
+	<meta name="screen-orientation" content="portrait">
+	<!-- QQ强制竖屏 -->
+	<meta name="x5-orientation" content="portrait">
+	<!-- UC强制全屏 -->
+	<meta name="full-screen" content="yes">
+	<!-- QQ强制全屏 -->
+	<meta name="x5-fullscreen" content="true">
+	<!-- UC应用模式 -->
+	<meta name="browsermode" content="application">
+	<!-- QQ应用模式 -->
+	<meta name="x5-page-mode" content="app">
+	<!-- windows phone 点击无高光 -->
+	<meta name="msapplication-tap-highlight" content="no">
+	<!-- 适应移动端end -->
+
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+
+<script src="js/jquery-2.1.3.min.js"></script>
+<script src="js/iscroll-zoom.js"></script>
+<script src="js/hammer.js"></script>
+<script src="js/jquery.photoClip.js"></script>
+<script type="text/javascript"> 
+//弹出对话框
+function showBg() { 
+	  var bh = $("body").height(); 
+	  var bw = $("body").width(); 
+	  $("#fullbg").css({ 
+	  height:bh, 
+	  width:bw, 
+	  display:"block" 
+	  }); 
+	  $("#dialog").show(); 
+	  $("#clipArea").photoClip({
+                    width: 200,
+                    height: 200,
+                    file: "#img_file",
+                    view: "#view",
+                    ok: "#clipBtn",
+                    loadStart: function() {
+                        console.log("照片读取中");
+                    },
+                    loadComplete: function() {
+                        console.log("照片读取完成");
+                    },
+                    clipFinish: function(dataURL) {
+						$("#reg_face_img").attr("src",dataURL);
+                    }
+                });
+	  $("#img_file").click();
+	  } 
+//关闭灰色 jQuery 遮罩 
+function closeBg() { 
+	  $("#fullbg,#dialog").hide(); 
+} 
+
+function callOtherDomain(url){
+			var invocation = new XMLHttpRequest();
+			  if(invocation) {
+				invocation.open('GET', url, true);
+				invocation.withCredentials = true;
+				/*invocation.onreadystatechange = handler;*/
+				/*invocation.send(); */
+			  }
+}
+function detect_brower(){
+    var useragent = navigator.userAgent;
+    if (useragent.match(/MicroMessenger/i) != "MicroMessenger") {
+        alert("请使用微信客户端打开！");
+        var opened = window.open('about:blank', '_self');
+        opened.opener = null;
+        opened.close();
+    }
+}
+
+$(function() {
+	$("#appSecret").text("SgDmznDkXFWeuqEcGMJAY3KrG4Add51G");
+	//detect_brower();
+	$('#login').click(function() {
+		var name_state = $('#name');
+		var psd_state = $('#psd');
+		var name = $('#name').val();
+		var psd = $('#psd').val();
+		if (name == ''||(!name.match(/^[1][0-9][0-9]{9}$/))){
+			name_state.parent().next().next().css("display", "block");
+			return false;
+		} else if (psd == '') {
+			name_state.parent().next().next().css("display", "none");
+			psd_state.parent().next().next().css("display", "block");
+			return false;
+		} else {
+			name_state.parent().next().next().css("display", "none");
+			psd_state.parent().next().next().css("display", "none");
+			var url="http://121.42.157.195:8080/qianxun/userLogin_login.action";
+			callOtherDomain(url);
+			/*$("#login_form").submit();*/
+			$.post(url,{"appSecret":"SgDmznDkXFWeuqEcGMJAY3KrG4Add51G","username":name,"password":psd},function(data){	
+				if(data=="-1"){
+					alert("用户名或密码错误");
+					return false;
+				}else if(data=="-2"){
+					alert("服务器错误");
+					return false;
+				}else{
+					/*var tel=$("#name").text();*/
+					var loginer=eval("("+data+")");
+					alert(loginer.userId);
+					$("#login_form").attr("action","main.html?userId="+loginer.userId);
+					$("#login_form").submit();
+				}
+			});
+		}
+	});
+	$('#regist').click(function() {
+		var face_base64=$('#reg_face_img').attr("src");
+		var name_r_state = $('#name_r');
+		var psd_r_state = $('#psd_r');
+		var affirm_psd_state = $('#affirm_psd');
+		var name_r = $('#name_r').val();
+		var psd_r = $('#psd_r').val();
+		var code=$("#check_code").val();
+		var sessionId=$("#sessionId").val();
+		var pic=$("#reg_face_img").attr("src");
+		var affirm_psd = $('#affirm_psd').val();
+		if (name_r == ''||(!name_r.match(/^[1][0-9][0-9]{9}$/))) {
+			name_r_state.parent().next().next().css("display", "block");
+			return false;
+		} else if (psd_r == '') {
+			psd_r_state.parent().next().next().css("display", "block");
+			return false;
+		} else if (affirm_psd == '') {
+			affirm_psd_state.parent().next().next().css("display", "block");
+			return false;
+		} else if (psd_r != affirm_psd) {
+			return false;
+		} else {
+			var url="http://121.42.157.195:8080/qianxun/userRegister_regist.action";
+			callOtherDomain(url);
+			/*$("#register_form").submit();*/
+			
+			$.post(url,{"user.username":name,"user.password":psd,"user.sessionId":sessionId,"user.registCheckCode":code,"user.iconBase64":pic},function(data){	
+				if(data=="-1"){
+					alert("失败");
+					return false;
+				}else if(data=="-2"){
+					alert("服务器错误");
+					return false;
+				}else if(data=="-3"){
+					alert("验证码错误");
+					return false;
+				}else{
+					alert("欢迎加入我们！");
+					$("#register_btn").parent().parent().fadeOut(1000);
+					$("#register_btn").parent().parent().siblings().fadeIn(2000);
+					$("#login_face_img").attr("src",face_base64);
+				}
+			});
+		}
+	})
+})
+function registerCheckCode(c){
+	var url="http://121.42.157.195:8080/qianxun/userRegister_sendVerifyCode.action";
+	var phone=$("#name_r").val();
+	callOtherDomain(url);
+	$.post(url,{"phone":phone},function(data){	
+		 var res=eval("("+data+")");
+		 var sessionId=res.sessionId;
+		 var check_code=res.code;
+		 alert(check_code);
+		 alert(sessionId); 
+		 $("#check_code").val(check_code);
+		 $("#check_code").text(check_code);
+		 $("#sessionId").val(sessionId);
+		 $("#sessionId").text(sessionId);
+	});
+}
+
+function ok_or_errorBylogin(l) {
+	var content = $(l).val();
+	if (content != "") {
+		$(l).parent().next().next().css("display", "none");
+	}
+}
+
+function ok_or_errorByRegister(r) {
+	var name_r = $('#name_r').val();
+	var affirm_psd = $("#affirm_psd");
+	var psd_r = $("#psd_r");
+	var affirm_psd_v = $("#affirm_psd").val();
+	var psd_r_v = $("#psd_r").val();
+	var content = $(r).val();
+	if(name_r==""||(!name_r.match(/^[1][0-9][0-9]{9}$/))){
+		name_r_state.parent().next().next().css("display", "block");
+	}
+	if (content == "") {
+		$(r).parent().next().next().css("display", "block");
+		return false;
+	} else {
+		$(r).parent().next().css("display", "block");
+		$(r).parent().next().next().css("display", "none");
+		if (psd_r_v == "") {
+			$(psd_r).parent().next().css("display", "none");
+			$(psd_r).parent().next().next().css("display", "none");
+			$(psd_r).parent().next().next().css("display", "block");
+			return false;
+		}
+		if (affirm_psd_v == "") {
+			$(affirm_psd_v).parent().next().css("display", "none");
+			$(affirm_psd_v).parent().next().next().css("display", "none");
+			$(affirm_psd_v).parent().next().next().css("display", "block");
+			return false;
+		}
+		if (psd_r_v == affirm_psd_v) {
+			$(affirm_psd).parent().next().css("display", "none");
+			$(affirm_psd).parent().next().next().css("display", "none");
+			$(psd_r).parent().next().css("display", "none");
+			$(psd_r).parent().next().next().css("display", "none");
+			$(affirm_psd).parent().next().css("display", "block");
+			$(psd_r).parent().next().css("display", "block");
+		} else {
+			$(affirm_psd).parent().next().css("display", "none");
+			$(affirm_psd).parent().next().next().css("display", "none");
+			$(psd_r).parent().next().css("display", "none");
+			$(psd_r).parent().next().next().css("display", "none");
+			$(psd_r).parent().next().css("display", "block");
+			$(affirm_psd).parent().next().next().css("display", "block");
+			return false;
+		}
+	}
+}
+
+function barter_btn(bb) {
+	$(bb).parent().parent().fadeOut(1000);
+	$(bb).parent().parent().siblings().fadeIn(2000);
+}
+</script>
+</head>
+
+<body class="login_body">
+
+<div class="login_div">
+	<div class="col-xs-12 login_title">登录</div>
+    <div class="col-xs-12 register_title" align="center"><img class="face_img" id="login_face_img" src="images/jineng3.png"/> </div>
+	<form id="login_form" class="login" method="post" action="http://121.42.157.195:8080/qianxun/userLogin_login.action">
+    <input type="text" name="appSecret" id="appSecret" style="display:none" value="SgDmznDkXFWeuqEcGMJAY3KrG4Add51G"/>
+		<div class="nav">
+			<div class="nav login_nav">
+				<div class="col-xs-4 login_username">
+					用户名:
+				</div>
+				<div class="col-xs-6 login_usernameInput">
+					<input type="text" name='username' id="name" value="" placeholder="  手机号"  onblur="javascript:ok_or_errorBylogin(this)" />
+				</div>
+				<div class="col-xs-1 ok_gou">
+					√
+				</div>
+				<div class="col-xs-1 error_cuo">
+					×
+				</div>
+			</div>
+			<div class="nav login_psdNav">
+				<div class="col-xs-4">
+					密&nbsp;&nbsp;&nbsp;码:
+				</div>
+				<div class="col-xs-6">
+					<input type="password" name='password' id="psd" value="" placeholder="  密码" onBlur="javascript:ok_or_errorBylogin(this)" />
+				</div>
+				<div class="col-xs-1 ok_gou">
+					√
+				</div>
+				<div class="col-xs-1 error_cuo">
+					×
+				</div>
+			</div>
+			<div class="col-xs-12 login_btn_div">
+				<input type="button" class="sub_btn" value="登录" id="login"/>
+			</div>
+		</div>
+	</form>
+
+	<div class="col-xs-12 barter_btnDiv">
+		<button class="barter_btn" onClick="javascript:barter_btn(this)">没有账号?前往注册</button>&nbsp;&nbsp;
+		<button class="barter_registerBtn" style="">下载APP</button>
+	</div>
+</div>
+
+<div class="register_body">
+	<div class="col-xs-12 register_title">注册</div>
+    <form id="register_form" class="register" method="post">
+    <div class="col-xs-12 register_title" align="center">
+    	<div id="fullbg"></div> 
+          <div id="dialog"> 
+          <p class="close"><a href="#" onclick="closeBg();">完成</a></p> 
+          <div> <input id="img_file" type="file" accept="image/*" style="display:none;"/>
+          <table align="center">
+          	<tr>
+            	<td><div id="clipArea"></div></td>
+                <td><div id="view"></div></td>
+            </tr>
+          </table>
+          <button id="clipBtn" class="btn">裁剪</button>
+          </div> 
+        </div> 
+      <img id="reg_face_img" name="user.iconBase64" class="face_img" onclick="showBg()" src="images/jineng3.png"/> 
+    </div>
+    	
+		<div class="nav">
+			<div class="nav register_nav">
+				<div class="col-xs-4">
+					用户名:
+				</div>
+				<div class="col-xs-6">
+					<input type="text" name="user.username" id="name_r" value="" placeholder="  手机号" onBlur="javascript:ok_or_errorByRegister(this)" />
+				</div>
+				<div class="col-xs-1 ok_gou">
+					√
+				</div>
+				<div class="col-xs-1 error_cuo">
+					×
+				</div>
+			</div>
+			<div class="nav register_psdnav">
+				<div class="col-xs-4">
+					密&nbsp;&nbsp;&nbsp;码:
+				</div>
+				<div class="col-xs-6">
+					<input type="password" name="user.password" id="psd_r" value="" placeholder="  密码" onBlur="javascript:ok_or_errorByRegister(this)" />
+				</div>
+				<div class="col-xs-1 ok_gou">
+					√
+				</div>
+				<div class="col-xs-1 error_cuo">
+					×
+				</div>
+			</div>
+			<div class="nav register_affirm">
+				<div class="col-xs-4">
+					确认密码:
+				</div>
+				<div class="col-xs-6">
+					<input type="password" name="" id="affirm_psd" value="" placeholder="  确认密码" onBlur="javascript:ok_or_errorByRegister(this)" />
+				</div>
+				<div class="col-xs-1 ok_gou">
+					√
+				</div>
+				<div class="col-xs-1 error_cuo">
+					×
+				</div>
+			</div>
+            <div class="nav register_affirm">
+            	<div class="col-xs-4">
+					验证码:
+				</div>
+				<div class="col-xs-6">
+					<input type="password" name="user.registCheckCode" id="registCheckCode" value="" placeholder="  输入验证码"/>
+                    <input type="button" id="registCheckCode_button" value="获取验证码" onclick="javascript:registerCheckCode(this)" />
+                    <input name="user.registCheckCode" type="text" id="check_code" style="display:none" />
+                    <input name="user.sessionId" type="text" id="sessionId" style="display:none" />
+              </div>
+				<div class="col-xs-1 ok_gou">
+					√
+				</div>
+				<div class="col-xs-1 error_cuo">
+					×
+				</div>
+            </div>
+			<div class="col-xs-12 register_btn_div">
+				<input type="submit" class="sub_btn" value="注册" id="regist" />
+			</div>
+		</div>
+	</form>
+	<div class="col-xs-12 barter_register">
+		<button id="register_btn" class="barter_registerBtn" onClick="javascript:barter_btn(this)" style="">已有秘籍?返回登录</button>&nbsp;&nbsp;
+		<button class="barter_registerBtn" style="">下载APP</button>
+	</div>
+</div>
+
+</body>
+</html>

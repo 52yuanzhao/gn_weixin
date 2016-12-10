@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<meta charset="utf-8" />
+	<title>发布技能</title>
+	
+	<meta name="Keywords" content="橙果" />
+    <meta name="Description" content="橙果" />
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" /><!--设置屏幕不可缩放-->
+	<meta name="apple-mobile-web-app-capable" content="yes" /><!-- 删除苹果默认的工具栏和菜单栏 -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" /><!-- 设置苹果工具栏颜色 -->
+	<meta name="format-detection" content="telphone=no, email=no" /><!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+	<!-- 启用360浏览器的极速模式(webkit) -->
+	<meta name="renderer" content="webkit">
+	<!-- 避免IE使用兼容模式 -->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<!-- 针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓 -->
+	<meta name="HandheldFriendly" content="true">
+	<!-- 微软的老式浏览器 -->
+	<meta name="MobileOptimized" content="320">
+	<!-- uc强制竖屏 -->
+	<meta name="screen-orientation" content="portrait">
+	<!-- QQ强制竖屏 -->
+	<meta name="x5-orientation" content="portrait">
+	<!-- UC强制全屏 -->
+	<meta name="full-screen" content="yes">
+	<!-- QQ强制全屏 -->
+	<meta name="x5-fullscreen" content="true">
+	<!-- UC应用模式 -->
+	<meta name="browsermode" content="application">
+	<!-- QQ应用模式 -->
+	<meta name="x5-page-mode" content="app">
+	<!-- windows phone 点击无高光 -->
+	<meta name="msapplication-tap-highlight" content="no">
+	<!-- 适应移动端end -->
+	<link rel="stylesheet" type="text/css" href="css/fabu.css">
+	<link href="css/main.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="css/zyUpload.css">
+    <script src="js/jquery-1.7.2.js"></script>
+	<script src="js/zyFile.js"></script>
+    <script src="js/zyUpload.js"></script>
+	<script src="js/demo.js"></script>
+    <script>
+    	function dec_ok(){
+			$("#jineng_dec").val($("#jineng_text").val());
+		}
+		function getUrlParam() {
+            url=location.href;
+            name="user_id";
+            var pattern = new RegExp("[?&]"+name+"\=([^&]+)", "g");
+            var matcher = pattern.exec(url);
+            var items = null;
+            if(null != matcher){
+                try{
+                    items = decodeURIComponent(decodeURIComponent(matcher[1]));
+                }catch(e){
+                    try{
+                        items = decodeURIComponent(matcher[1]);
+                    }catch(e){
+                        items = matcher[1];
+                    }
+                }
+            }
+			return items;
+		}
+		function detect_brower(){
+		    var useragent = navigator.userAgent;
+		    if (useragent.match(/MicroMessenger/i) != "MicroMessenger") {
+		        alert("请使用微信客户端打开！");
+		        var opened = window.open('about:blank', '_self');
+		        opened.opener = null;
+		        opened.close();
+		    }
+		}
+		$(function(){
+			//detect_brower();
+			var user_id=getUrlParam();
+			if(user_id==null){
+				alert("请先登录!");
+				window.close();
+			}
+			$("#user_id").text(user_id);
+			$("#user_id").val(user_id);
+			$("#submit").click(function(e) {
+            	$("#uploadForm").submit();
+        	});
+		});
+	function open(){
+		 // jquery 表单提交
+		 var user_id=getUrlParam();
+		  $("#uploadForm").ajaxSubmit(function(message) {
+				// 对于表单提交成功后处理，message为提交页面的返回内容
+				alert(message);
+				if(message.equals("-1")){
+					window.open('user_info/loginer_info.html?userId='+user_id,'_self');
+				}
+			 });
+     
+    	  return false; // 必须返回false，否则表单会自己再做一次提交操作，并且页面跳转
+	}
+    </script>
+</head>
+
+<body>
+<div class="main">
+	<!--头部-->
+	<div class="header" id="bktop">
+		<div class="logo"><a href="main.html?content_from=1"><img src="images/logo.gif" /></a></div>
+	</div>
+	<!--发布技能开始-->
+<form id="uploadForm" action="http://121.42.157.195:8080/qianxun/businessService_save.action" method="get" enctype="multipart/form-data" onSubmit="return open();">
+	<div id="fabu_div">
+    		<!--标题-->
+	  <div id="jineng_item" class="jineng_item">
+      
+      			<input name="businessService.user.id" id="user_id" style="display:none;"/>
+                
+              <div class="jineng_award">我能*</div>
+              <div><input name="businessService.name" style="color:#CCC" class="jineng_title" type="text" placeholder="如提供面试经验、教你烘焙"/></div>
+      </div>
+      <div id="fabu_dec_pic" class="fabu_dec_pic">
+            	<textarea style="color:#CCC;" id="jineng_text" class="jineng_dec" placeholder="选填，描述一下你的服务，让大家更感兴趣哦" onBlur="dec_ok()"></textarea>
+                <input type="text" id="jineng_dec" name="businessService.detail" style="display:none;"/>
+      </div>
+      <div id="demo" class="demo"></div>
+  </div>
+  		<div id="jineng_price" class="jineng_price">
+          <div class="jineng_price_price">售价*</div>
+          <div><input name="businessService.reward_money" class="jineng_price_dec" style="color:#CCC" type="text" placeholder="请输入价格"/></div>
+      </div>
+     <!-- <div id="jineng_price" class="jineng_price">
+          <div class="jineng_price_price">联系方式*</div>
+          <div><input name="jineng_price_dec" class="jineng_price_dec" type="text" placeholder="请输入手机号"/></div>
+      </div>-->
+ </form>
+<div class="bottom-bot" style="font-size:22px;"><input id="submit" type="button" value="发  布" style="background:none; border:hidden;font-size:22px; color:#FFF"/></div>
+	<!--</div>-->
+</div>
+
+</body>
+</html>

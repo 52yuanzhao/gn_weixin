@@ -1,0 +1,203 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>个人主页</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" /><!--设置屏幕不可缩放-->
+	<meta name="apple-mobile-web-app-capable" content="yes" /><!-- 删除苹果默认的工具栏和菜单栏 -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" /><!-- 设置苹果工具栏颜色 -->
+	<meta name="format-detection" content="telphone=no, email=no" /><!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+	<!-- 启用360浏览器的极速模式(webkit) -->
+	<meta name="renderer" content="webkit">
+	<!-- 避免IE使用兼容模式 -->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<!-- 针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓 -->
+	<meta name="HandheldFriendly" content="true">
+	<!-- 微软的老式浏览器 -->
+	<meta name="MobileOptimized" content="320">
+	<!-- uc强制竖屏 -->
+	<meta name="screen-orientation" content="portrait">
+	<!-- QQ强制竖屏 -->
+	<meta name="x5-orientation" content="portrait">
+	<!-- UC强制全屏 -->
+	<meta name="full-screen" content="yes">
+	<!-- QQ强制全屏 -->
+	<meta name="x5-fullscreen" content="true">
+	<!-- UC应用模式 -->
+	<meta name="browsermode" content="application">
+	<!-- QQ应用模式 -->
+	<meta name="x5-page-mode" content="app">
+	<!-- windows phone 点击无高光 -->
+	<meta name="msapplication-tap-highlight" content="no">
+	<!-- 适应移动端end -->
+<link rel="stylesheet" type="text/css" href="../css/psonal_info.css"/>
+<script type="text/javascript" src="../js/jquery-1.10.1.min.js"></script>
+	<script type="text/javascript">
+		//技能列表
+ 		function self_item(tiaozhuan_href,fengmian_pic,jineng_title,jineng_price,jineng_cosum){
+			var loginer_id=getUrlParam();	
+			var str='<a href=../item.html?content_page="'+tiaozhuan_href+'&loginer_id='+loginer_id+'"><div><table width="100%" border="0" cellspacing="5" cellpadding="3"><tr><td width="13%"><img src="'+fengmian_pic+'"/></td><td width="87%"><table width="100%" border="0" cellspacing="10" cellpadding="3"><tr><td><h4>技能 '+jineng_title+'</h4></td></tr><tr><td><h5>'+jineng_price+'</h5></td></tr><tr><td><h5>销量：'+jineng_cosum+'</h5></td></tr></table></td></tr></table></div></a><div class="fengexian"></div>';
+			$("#p_jineng").append(str);
+		}
+    	function jn_xq(content){
+				$("#jineng1").attr("action",'../item.html?content_page='+content);
+				$("#jineng1").submit();
+		}
+	function getUrlParam() {
+            url=location.href;
+            name="userId";
+            var pattern = new RegExp("[?&]"+name+"\=([^&]+)", "g");
+            var matcher = pattern.exec(url);
+            var items = null;
+            if(null != matcher){
+                try{
+                    items = decodeURIComponent(decodeURIComponent(matcher[1]));
+                }catch(e){
+                    try{
+                        items = decodeURIComponent(matcher[1]);
+                    }catch(e){
+                        items = matcher[1];
+                    }
+                }
+            }
+			return items;
+		}
+function callOtherDomain(){
+			var invocation = new XMLHttpRequest();
+			var url = 'http://121.42.157.195:8080/qianxun/user_getInfoById.action';
+			  if(invocation) {
+				invocation.open('GET', url, true);
+				invocation.withCredentials = true;
+				/*invocation.onreadystatechange = handler;*/
+				/*invocation.send(); */
+			  }
+}
+function refresh_list1(response){
+			var data=eval("("+response+")");
+			var pic_url='http://121.42.157.195:8080';
+			var homePageBackgroundImage,face,p_name,sex,p_sex,shen_rz,xue_rz,rank;
+			//homePageBackgroundImage=pic_url+data.homePageBackgroundImage;		//背景
+			face=pic_url+data.headIcon;	//头像
+			p_name=data.nickName;	//昵称
+			sex=data.gender;		//性别
+			if(sex=="男"||sex==""){
+				p_sex="../images/male.png";
+			}else if(sex=="女"){
+				p_sex="../images/female.png";
+			}
+			var ren=data.verifyStatus;		//认证状态
+			if(ren==0){
+				shen_rz='../images/shiren.png';
+				xue_rz='../images/xueren.png';
+			}else if(ren==1){
+				shen_rz='';
+				xue_rz='../images/xueren.png';
+			}else if(ren==2){
+				shen_rz='';
+				xue_rz='';
+			}
+//			$("#p_setting").attr("src",homePageBackgroundImage);
+			$("#p_face").attr("src",face);
+			$("#p_name").append(p_name);
+			$("#sex_pic").attr("src",p_sex);
+			$("#shen_rz").attr("src",shen_rz);
+			$("#xue_rz").attr("src",xue_rz);
+			rank=data.rank;
+			for(var i=0;i<rank;i++){
+				$("#rank").append('<img src="../images/orange.png"/>');
+			}
+			for(var i=rank;i<7;i++){
+				$("#rank").append('<img src="../images/nothing.png"/>');
+			}
+}
+function self_item(tiaozhuan_href,fengmian_pic,jineng_title,jineng_price,jineng_cosum){
+			var loginer_id=getUrlParam();
+			var str='<a href="../item.html?content_page='+tiaozhuan_href+'&loginer_id='+loginer_id+'"><div><table width="100%" border="0" cellspacing="5" cellpadding="3"><tr><td width="13%"><img src="'+fengmian_pic+'"/></td><td width="87%"><table width="100%" border="0" cellspacing="10" cellpadding="3"><tr><td><h4>技能 '+jineng_title+'</h4></td></tr><tr><td><h5>'+jineng_price+'</h5></td></tr><tr><td><h5>销量：'+jineng_cosum+'</h5></td></tr></table></td></tr></table></div></a><div class="fengexian"></div>';
+			$("#p_jineng").append(str);
+		}
+function refresh_list2(response){
+			var data=eval("("+response+")");
+			var pic_url='http://121.42.157.195:8080';
+			var tiaozhuan_href,fengmian_pic,jineng_title,jineng_price,jineng_cosum;
+			$.each(data.list, function (index, item) {
+					tiaozhuan_href=item.id;
+					if(item.images.length==0){
+						fengmian_pic="images/jineng3.png";
+					}else{
+						fengmian_pic=pic_url+item.images[0].link;
+					}
+					jineng_title=item.name;
+					if(item.reward_thing!=""){
+						jineng_price=item.reward_money+'/'+item.reward_unit+'+'+item.reward_thing;
+					}else{
+						jineng_price=item.reward_money+'/'+item.reward_unit;
+					}
+					jineng_cosum=item.finishedPeople;
+					self_item(tiaozhuan_href,fengmian_pic,jineng_title,jineng_price,jineng_cosum);
+			});
+}
+		$(function(){
+			var item=getUrlParam();
+			if(item==null){
+					alert("请先登录!");
+					window.close();
+					window.open("../Login.html",'_self');
+			}
+			$("#fabu_href").attr("href","../fabu.html?user_id="+item);
+			$("#main_href").attr("href","../main.html?userId="+item);
+			var p_info_url="http://121.42.157.195:8080/qianxun/user_getInfoById.action";
+			var p_serv_url="http://121.42.157.195:8080/qianxun/businessService_getBriefByUserId.action";
+			callOtherDomain();
+			$.post(p_info_url,{"userId":item},function(response,status){
+				console.log(response);
+				refresh_list1(response);
+			});
+			$.post(p_serv_url,{"userId":item},function(response,status){
+				console.log(response);
+				refresh_list2(response);
+			});
+			
+		});
+    </script>
+
+</head>
+
+<body>
+<div class="main">
+<div class="header">
+<div class="logo"><a id="main_href"><img src="../images/logo.gif" /></a></div>
+</div>
+<div >
+<div id="setting" class="setting">
+<img id="p_setting" class="p_setting" src="../images/setting.jpg" />
+</div>
+<div class="fabu" align="right">
+<a id="fabu_href"><img width="50px" height="50px" src="../images/fabu.png"/></a>
+</div>
+<!--头像区域开始-->
+<div align="center" class="face">
+  <img id="p_face"/>
+ <table width="100%" border="0" cellspacing="5" cellpadding="3">
+  <tr>
+    <td id="p_name" class="p_name" width="50%"></td>
+    <td width="50%"><img id="sex_pic" class="sex_pic"/></td>
+  </tr>
+  <tr>
+    <td id="rank" class="p_class" colspan="2" align="center"></td>
+  </tr>
+  <tr>
+   <td class="p_renzheng" align="center" colspan="2"><img id="shen_rz" class="xq_renzheng"/>&nbsp;<img id="xue_rz" class="xq_renzheng"/></td>
+  </tr>
+</table>	
+</div>
+
+<!--头像区域结束-->
+<!--技能区域开始-->
+<div id="p_jineng" align="left">
+
+
+</div>
+<!--技能区域结束-->
+</div>
+</body>
+</html>

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<meta charset="utf-8" />
+	<title>逛逛吧</title>
+	
+	<meta name="Keywords" content="橙果" />
+    <meta name="Description" content="橙果" />
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+	<meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
+	
+	<!-- Mobile Devices Support @begin -->
+        <meta content="application/xhtml+xml;charset=UTF-8" http-equiv="Content-Type">
+        <meta content="no-cache,must-revalidate" http-equiv="Cache-Control">
+        <meta content="no-cache" http-equiv="pragma">
+        <meta content="0" http-equiv="expires">
+        <meta content="telephone=no, address=no" name="format-detection">
+        <meta name="apple-mobile-web-app-capable" content="yes" /> <!-- apple devices fullscreen -->
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <!-- Mobile Devices Support @end -->
+	
+	<link href="css/main.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="js/main.js"></script>
+	<script type="text/javascript" src="js/jquery.rotate.min.js"></script>
+	<script type="text/javascript" src="js/jQuery-jcMarquee.js"></script>
+	<script src="js/idangerous.swiper-1.9.1.min.js"></script>
+	<script src="js/touche.js"></script>
+	<script src="js/p-pull-refresh.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/main_jineng.css">
+	<script src="js/main_item.js"></script>
+	<script type="text/javascript">
+	 /**获取指定URL的参数值**/
+        function getUrlParam() {
+            url=location.href;
+            userId="userId";
+            var pattern = new RegExp("[?&]"+userId+"\=([^&]+)", "g");
+            var matcher = pattern.exec(url);
+            var items = null;
+            if(null != matcher){
+                try{
+                    items = decodeURIComponent(decodeURIComponent(matcher[1]));
+                }catch(e){
+                    try{
+                        items = decodeURIComponent(matcher[1]);
+                    }catch(e){
+                        items = matcher[1];
+                    }
+                }
+            }
+	  $("#loginer_info").attr("href","user_info/loginer_info.html?userId="+items);
+
+			return items;
+		}
+	
+	function refresh_list(response){
+		var loginer_id=getUrlParam();
+		var data=eval("("+response+")");
+		var face,face_img,jineng_item,jineng_price,jineng_person,shen_renzheng,xue_renzheng,jineng_dec,jineng_huibao,a_href,face_href;
+				$.each(data.list, function (index, item) {
+					var pic_url='"http://121.42.157.195:8080';
+					if(item.user.headIcon!=""){
+						face=pic_url+item.user.headIcon+'"';
+					}else{
+						face="images/jineng3.png";
+					}
+					if(item.user.gender=="男"){
+						face_img='"images/male.png"';
+					}else if(item.user.gender=="女"){
+						face_img='"images/female.png"';
+					}else{
+						face_img="";
+					}
+					jineng_item=item.name;
+					if(item.reward_money!=""){
+						jineng_price=item.reward_money;
+					}
+					jineng_person=item.user.nickName;
+					if(item.user.verifyStatus==0){
+						//未认证
+						shen_renzheng='"images/wei_shen.png"';
+						xue_renzheng='"images/wei_xue.png"';
+					}else if(item.user.verifyStatus==1){
+						//身份证认证，学生证未认证
+						shen_renzheng='"images/shen.png"';
+						xue_renzheng='"images/wei_xue.png"';
+					}else if(item.user.verifyStatus==2){
+						//都已认证
+						shen_renzheng='"images/shen.png"';
+						xue_renzheng='"images/xue.jpg"';
+					}
+					jineng_dec=item.detail;
+					if(item.reward_thing!="undefined"){
+						jineng_huibao=item.reward_thing;
+					}else{
+						
+					}
+					a_href='"item.html?content_page='+item.id+'&loginer_id='+loginer_id+'"';   //了解更多
+					face_href='"user_info/owner_info.html?userId='+item.user.id+'&loginer_id='+loginer_id+'"';			//头像
+					switch(item.images.length){
+							case 0:  
+								refresh_item(face_href,face,face_img,jineng_item,jineng_price,jineng_person,shen_renzheng,xue_renzheng,jineng_dec,jineng_huibao,a_href);
+								break;
+							case 1:
+								jineng_pic1=pic_url+item.images[0].link+'"';
+								refresh_item1(face_href,face,face_img,jineng_item,jineng_price,jineng_person,shen_renzheng,xue_renzheng,jineng_dec,jineng_huibao,a_href,jineng_pic1);
+								break;
+							case 2:
+								jineng_pic1=pic_url+item.images[0].link+'"';
+								jineng_pic2=pic_url+item.images[1].link+'"';
+								refresh_item2(face_href,face,face_img,jineng_item,jineng_price,jineng_person,shen_renzheng,xue_renzheng,jineng_dec,jineng_huibao,a_href,jineng_pic1,jineng_pic2);
+								break;
+							default:
+								jineng_pic1=pic_url+item.images[0].link+'"';
+								jineng_pic2=pic_url+item.images[1].link+'"';
+								jineng_pic3=pic_url+item.images[2].link+'"';
+								refresh_item2(face_href,face,face_img,jineng_item,jineng_price,jineng_person,shen_renzheng,xue_renzheng,jineng_dec,jineng_huibao,a_href,jineng_pic1,jineng_pic2,jineng_pic3);
+								break;
+
+					}
+					if(jineng_huibao==""){
+						$("#jineng_award").css("display","none");
+					}
+				   });
+		var item=getUrlParam();
+		if(item==null){
+			$("#tiaozhuan").removeAttr("href");	
+			$("#loginer_info").removeAttr("href");
+			$("#face_href").removeAttr("href");
+			$("#tiaozhuan").click(function(e) {
+                alert("请先登录!");
+				window.open("Login.html","_self");
+            });
+			$("#loginer_info").click(function(e) {
+                alert("请先登录!");
+				window.open("Login.html","_self");
+            });
+			$("#face_href").click(function(e) {
+                alert("请先登录!");
+				window.open("Login.html","_self");
+            });
+		}else{
+			$("#loginer_info").attr("href","user_info/loginer_info.html?userId="+item);
+		}
+		/**跳转到个人主页**/
+	}
+	function callOtherDomain(){
+			var invocation = new XMLHttpRequest();
+			var url = 'http://121.42.157.195:8080/qianxun/businessService_getLatestByPage.action';
+			  if(invocation) {
+				invocation.open('GET', url, true);
+				invocation.withCredentials = true;
+				/*invocation.onreadystatechange = handler;*/
+				/*invocation.send(); */
+			  }
+}
+
+function detect_brower(){
+    var useragent = navigator.userAgent;
+    if (useragent.match(/MicroMessenger/i) != "MicroMessenger") {
+        alert("请使用微信客户端打开！");
+        var opened = window.open('about:blank', '_self');
+        opened.opener = null;
+        opened.close();
+    }
+}
+
+	$(function(){
+		
+		//detect_brower();
+		
+		var url='http://121.42.157.195:8080/qianxun/businessService_getLatestByPage.action';
+		//Main Swiper
+		var swiper = new Swiper('.swiper1', {
+			pagination : '.pagination1',
+			loop:true,
+			autoPlay:5000,
+			grabCursor: true
+		});
+		//Clickable pagination
+		$('.pagination1 .swiper-pagination-switch').click(function(){
+			swiper.swipeTo($(this).index())
+		});	
+		callOtherDomain();
+		$.post(url,'{"page":"1"}',function(data,status){
+				refresh_list(data);
+			});
+		
+			
+	});
+	</script>
+</head>
+
+<body>
+<div class="main">
+	<!--头部-->
+	<div class="header" id="bktop">
+		<div class="logo"><a href="main.html"><img src="images/logo.gif" /></a></div>
+		<div class="banner">
+			<div class="close"><img id="img1" src="images/banner01.gif" /></div>
+			<div class="open hide"><img id="img2" src="images/banner02.gif" /></div>
+			<ul class="xla">
+				<li>
+					<a id="loginer_info"><font>个人主页</font><img src="images/xiala.gif" /></a>
+				</li>
+				<li>
+					<a class="dianj dj2" href="javascript:;"><font>教你大招</font><img id="ig2" src="images/xiala.gif" /></a>
+					<div class="zilan">
+						<a href="http://www.rrxiu.net/view-0eme2l">快速上手</a>
+						<a href="wzxy.html">玩转校园</a>
+						<a href="aboutus.html">关于我们</a>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div class="clearBoth"></div>
+	</div>
+	<!--滚动图-->
+	<div id="main">
+		<div class="home-device">
+			<a class="arrow-left" href="#"></a> 
+			<a class="arrow-right" href="#"></a>
+			<div class="swiper-main">
+				<div class="swiper-container swiper1">
+					<div class="swiper-wrapper">
+					    <div class="swiper-slide"><img src="images/A1.png" width="100%"></div>
+						<div class="swiper-slide"><img src="images/A2.png" width="100%"></div>
+						<div class="swiper-slide"><img src="images/A3.png" width="100%"></div>
+						<div class="swiper-slide"><img src="images/A4.png" width="100%"></div>
+						<div class="swiper-slide"><img src="images/A5.png" width="100%"></div>
+						<div class="swiper-slide"><img src="images/A6.png" width="100%"></div>
+						<div class="swiper-slide"><img src="images/A7.png" width="100%"></div>
+						<div class="swiper-slide"><img src="images/A8.png" width="100%"></div>
+					</div>
+				</div>
+			</div>			
+		</div>
+		<div class="dian"><div class="pagination pagination1"></div></div>
+	</div>	
+	<!--资讯列表-->
+	<div class="news">
+		<!--滚动公告-->
+		<div class="gongao">
+			<div class="laba"><img src="images/gongao.gif" /></div>
+			<div class="wenzi" id="mrq">
+				<div id="Marquee_x">
+					<ul>
+						<li>
+							<div>大学就四年，还不快来充实一下自己的生活你就OUT了！</div>
+						</li>
+						<li>
+							<div>听说学霸小课堂开课了，快来抱大腿吧，各种大神带你飞！</div>
+						</li>
+						<li>
+							<div>lalalala~再也不用担心快递没人帮忙领了，听说还可以帮忙占座哦(*^__^*) 嘻嘻……</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="clearBoth"></div>
+		</div>
+		      <!--下拉刷新-->
+  <div class="container" id="container">
+        <div class="loading-warp">
+            <div class="box">
+                <div>
+                    <img src="images/loading.gif" />
+                    <span class="text">下拉开始刷新</span>
+                </div>
+            </div>
+        </div>
+        
+	   <!--动态加table载-->
+		<div id="jiazai">
+
+        
+		<div class="bottom-bot"><a href="">下载APP</a></div>
+        
+	<!--</div>-->
+    </div><!--下拉刷新-->
+</div>
+<script type="text/javascript">
+  $('#Marquee_x').jcMarquee({ 'marquee':'x','margin_right':'300px','speed':20 });
+</script>
+<script type="text/javascript">
+	
+	var $statu = $('.loading-warp .text');
+
+	var pullRefresh = $('.container').pPullRefresh({
+		$el: $('.container'),
+		$loadingEl: $('.loading-warp'),
+		sendData: {'page':'1'},
+		url: 'http://121.42.157.195:8080/qianxun/businessService_getLatestByPage.action',
+		autoHide: true,
+		callbacks: {
+			pullStart: function(){
+				$statu.text('松开开始刷新');
+			},
+			start: function(){
+				$statu.text('数据刷新中···');
+			},
+			success: function(response){
+				$statu.text('数据刷新成功！');
+				refresh_list(response);
+				console.log(response);
+			},
+			end: function(){
+				$statu.text('下拉刷新结束');
+			},
+			error: function(){
+				$statu.text('找不到请求地址,数据刷新失败');
+			}
+		}
+	});
+</script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+/* CSS Document */
+@charset "utf-8";
+* {padding:0; margin:0;}
+html, body{background:#c0c0c0;margin: 0;padding: 0;width: 100%;height: 100%;min-height: 100%;font-family: "宋体" ,Helvetica, Arial, sans-serif;
+font-size: 16px;line-height: 1.231;-webkit-touch-callout: none;display: -webkit-box;-webkit-box-orient: vertical;-webkit-box-align:stretch;position: relative;}
+a {text-decoration:none;outline:none;color:#777777}
+a:hover{text-decoration:none}
+.clearBoth{clear:both;height:0;}
+ul,li {list-style:none;}
+img {border:none;}
+.main{max-width:740px;margin:auto;min-height:100%;background-color:#262626;position: relative;}
+.hide{display:none;}
+
+/*详情头部开始*/
+.xq_header{
+	width:100%;height:90px;
+	background:url(../images/jn_xq_setting1.png);
+	background-size:cover;
+	background-position:center;
+	}
+
+.face_div{
+	margin:0px 10px 2px 6px;
+	float:left;
+}
+.face_div img{
+	width:60px;
+    height:60px;
+    border:4px solid #FFF;
+    border-radius:100px;
+}
+.xq_per_name{
+	color:#FFF; text-align:left; font-size:22px;}
+.xq_renzheng{
+	width:77px;
+	height:16px;}
+/*详情头部结束*/
+/*详情描述开始*/
+.xq_dec_div{
+	line-height:35px;
+	margin-top:20px;
+	text-align:center;}
+#title h2{
+	color:#FFF;}
+#price h2{
+	color:#f78000;}
+#jn_huibao{
+	margin-top:15px;}
+#jn_huibao h4{
+	color:#CCC;
+}
+#jn_desc{
+	line-height:22px;
+	margin-left:10px;
+	margin-right:10px;
+	margin-top:20px;
+	text-align:left;}
+#jn_desc img{
+	float:left;
+	padding:5px;
+	width:24px;
+	height:24px;}
+#jn_desc p{
+	color:#999;
+	padding:5px;
+}
+#jn_pic{
+	margin-top:20px;
+	padding:10px;
+	}
+#jn_pic img{
+	width:100%;
+	height:auto;}
+/*详情描述结束*/

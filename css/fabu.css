@@ -1,0 +1,68 @@
+@charset "utf-8";
+/* CSS Document */
+/**发布技能**/
+.jineng_item{
+	margin-top:15px;
+	margin-bottom:5px;	
+	background-color:#333;
+	padding:10px;
+	}
+.jineng_award{
+	line-height:16px;
+	font-size:16px;
+	text-align:center;
+	float:left;
+	margin-left:16px;
+	color:#ffd600;}
+.jineng_title{
+	width: 96%;
+	line-height: 16px;
+	margin-left: 5px;
+	float: none;
+	background: none;
+	border: hidden;
+	width: 80%;
+	text-height: font-size;
+	font-size: 16px;
+}
+.fabu_dec_pic{
+	padding:10px;
+	margin-top:1px;
+	background-color:#333;
+}
+.jineng_dec{
+	font-size:16px;
+	background:none;
+	border:hidden;
+	margin-left:16px;
+	height:120px;
+	width:96%;
+}
+.add_pic{
+	background-image:url(../images/add_pic.png);
+	width:100px;
+	height:100px;
+}
+.jineng_price{
+	margin-top:8px;
+	margin-bottom:5px;	
+	background-color:#333;
+	padding:10px;
+	}
+.jineng_price_price{
+	line-height:16px;
+	font-size:16px;
+	text-align:center;
+	float:left;
+	margin-left:16px;
+	color:#ffd600;}
+.jineng_price_dec{
+	width: 70%;
+	line-height: 16px;
+	margin-left: 5px;
+	float: none;
+	background: none;
+	border: hidden;
+	text-height: font-size;
+	font-size: 16px;
+}
